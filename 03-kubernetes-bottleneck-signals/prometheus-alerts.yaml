@@ -1,0 +1,13 @@
+groups:
+  - name: ingestion-bottleneck
+    rules:
+      - alert: BackendBottleneckBeforeOutage
+        expr: |
+          (histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="ingester"}[5m])) by (le)) > 0.5)
+          and (sum(rate(container_cpu_cfs_throttled_seconds_total{container="ingester"}[5m])) > 0.1)
+          and (max(kafka_consumergroup_lag{consumergroup="ingester"}) > 1000)
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Ingestion latency, CPU throttling, and consumer lag are rising together
