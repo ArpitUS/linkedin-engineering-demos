@@ -11,3 +11,7 @@ Five small, dependency-free Go projects that turn the accompanying LinkedIn post
 | `05-versioned-api-contracts` | Additive contract evolution | `go test ./... && go run .` |
 
 All examples use only the Go standard library, so they are easy to run during a screen recording or live walkthrough.
+
+## Post Series
+
+Publication-ready LinkedIn copy and workflow graphics are in [`posts/`](posts/README.md). Each post links to its matching runtime and test command.

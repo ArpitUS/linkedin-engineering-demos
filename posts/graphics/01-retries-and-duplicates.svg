@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#92c5ff"/></marker></defs>
+  <rect width="1200" height="630" fill="#071526"/><rect x="50" y="46" width="1100" height="538" rx="26" fill="#0d223a" stroke="#1f4f78"/>
+  <text x="95" y="115" fill="#ffffff" font-family="Arial, sans-serif" font-size="38" font-weight="700">Retries are delivery, not deduplication</text>
+  <text x="95" y="156" fill="#9bb7d1" font-family="Arial, sans-serif" font-size="20">The acknowledgement can fail after the database write succeeds.</text>
+  <rect x="95" y="230" width="210" height="100" rx="14" fill="#143657"/><text x="120" y="272" fill="#d7ebff" font-family="Arial" font-size="22" font-weight="700">1. Producer</text><text x="120" y="302" fill="#9bb7d1" font-family="Arial" font-size="18">sends evt-9f2</text>
+  <path d="M305 280 H400" stroke="#92c5ff" stroke-width="4" marker-end="url(#a)"/>
+  <rect x="405" y="230" width="210" height="100" rx="14" fill="#143657"/><text x="430" y="272" fill="#d7ebff" font-family="Arial" font-size="22" font-weight="700">2. Ingestion</text><text x="430" y="302" fill="#9bb7d1" font-family="Arial" font-size="18">writes evt-9f2</text>
+  <path d="M615 280 H710" stroke="#f7ad55" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#a)"/>
+  <rect x="715" y="230" width="210" height="100" rx="14" fill="#4a2a1b"/><text x="740" y="272" fill="#ffd9b0" font-family="Arial" font-size="22" font-weight="700">3. ACK lost</text><text x="740" y="302" fill="#f7ad55" font-family="Arial" font-size="18">timeout at client</text>
+  <path d="M820 330 C820 410 500 410 500 350" fill="none" stroke="#f7ad55" stroke-width="4" marker-end="url(#a)"/>
+  <text x="572" y="420" fill="#f7ad55" font-family="Arial" font-size="20" font-weight="700">retry: same event</text>
+  <rect x="95" y="470" width="480" height="70" rx="12" fill="#55252a"/><text x="120" y="514" fill="#ffc6cb" font-family="Arial" font-size="22" font-weight="700">Naive write: total = 2 (wrong)</text>
+  <rect x="625" y="470" width="480" height="70" rx="12" fill="#17493f"/><text x="650" y="514" fill="#b7f1dc" font-family="Arial" font-size="22" font-weight="700">Event ID check: total = 1 (correct)</text>
+</svg>

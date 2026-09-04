@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#b9a6ff"/></marker></defs>
+  <rect width="1200" height="630" fill="#160b2d"/><rect x="50" y="46" width="1100" height="538" rx="26" fill="#241145" stroke="#593b91"/>
+  <text x="95" y="115" fill="#ffffff" font-family="Arial" font-size="38" font-weight="700">One key. One irreversible write.</text><text x="95" y="156" fill="#c7b9df" font-family="Arial" font-size="20">Idempotency turns an ambiguous retry into a deterministic response.</text>
+  <rect x="95" y="230" width="225" height="110" rx="14" fill="#38206b"/><text x="120" y="274" fill="#eee9ff" font-family="Arial" font-size="22" font-weight="700">Client request</text><text x="120" y="306" fill="#c7b9df" font-family="Arial" font-size="18">key=batch-42</text>
+  <path d="M320 285 H420" stroke="#b9a6ff" stroke-width="4" marker-end="url(#a)"/>
+  <rect x="425" y="230" width="250" height="110" rx="14" fill="#38206b"/><text x="450" y="274" fill="#eee9ff" font-family="Arial" font-size="22" font-weight="700">Atomic store</text><text x="450" y="306" fill="#c7b9df" font-family="Arial" font-size="18">key + receipt</text>
+  <path d="M675 285 H775" stroke="#b9a6ff" stroke-width="4" marker-end="url(#a)"/>
+  <rect x="780" y="230" width="260" height="110" rx="14" fill="#17493f"/><text x="805" y="274" fill="#b7f1dc" font-family="Arial" font-size="22" font-weight="700">First request</text><text x="805" y="306" fill="#b7f1dc" font-family="Arial" font-size="18">201 / receipt #1</text>
+  <path d="M207 340 V415 H550" fill="none" stroke="#b9a6ff" stroke-width="4" marker-end="url(#a)"/><text x="310" y="398" fill="#c7b9df" font-family="Arial" font-size="19">retry with batch-42</text>
+  <rect x="555" y="370" width="260" height="90" rx="14" fill="#38206b"/><text x="580" y="408" fill="#eee9ff" font-family="Arial" font-size="21" font-weight="700">Key exists?</text><text x="580" y="436" fill="#c7b9df" font-family="Arial" font-size="17">return saved result</text>
+  <path d="M815 415 H900" stroke="#b9a6ff" stroke-width="4" marker-end="url(#a)"/>
+  <rect x="905" y="370" width="200" height="90" rx="14" fill="#17493f"/><text x="930" y="408" fill="#b7f1dc" font-family="Arial" font-size="21" font-weight="700">Retry</text><text x="930" y="436" fill="#b7f1dc" font-family="Arial" font-size="17">200 / receipt #1</text>
+  <text x="95" y="540" fill="#ffffff" font-family="Arial" font-size="22" font-weight="700">Database uniqueness is the coordination mechanism across retries, replicas, and restarts.</text>
+</svg>
