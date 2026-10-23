@@ -1,9 +1,90 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7ec8ff"/></marker></defs>
-  <rect width="1200" height="630" fill="#071723"/><rect x="50" y="46" width="1100" height="538" rx="26" fill="#0d2939" stroke="#1c617f"/>
-  <text x="95" y="115" fill="#ffffff" font-family="Arial" font-size="38" font-weight="700">A production Go service needs controlled failure</text><text x="95" y="156" fill="#a9cddd" font-family="Arial" font-size="20">Deadlines, backpressure, and shutdown turn overload into known behavior.</text>
-  <rect x="95" y="235" width="290" height="190" rx="16" fill="#123b50"/><text x="125" y="280" fill="#d9f2ff" font-family="Arial" font-size="24" font-weight="700">Context deadline</text><text x="125" y="318" fill="#a9cddd" font-family="Arial" font-size="18">dependency stalls</text><path d="M125 360 H330" stroke="#7ec8ff" stroke-width="5"/><text x="125" y="402" fill="#7ec8ff" font-family="Arial" font-size="21" font-weight="700">cancel at 150 ms</text>
-  <rect x="455" y="235" width="290" height="190" rx="16" fill="#123b50"/><text x="485" y="280" fill="#d9f2ff" font-family="Arial" font-size="24" font-weight="700">Bounded workers</text><text x="485" y="318" fill="#a9cddd" font-family="Arial" font-size="18">capacity = 1</text><rect x="485" y="346" width="70" height="44" rx="8" fill="#5aa9d6"/><rect x="570" y="346" width="70" height="44" rx="8" fill="#b74d35"/><text x="493" y="375" fill="#ffffff" font-family="Arial" font-size="16">work</text><text x="578" y="375" fill="#ffffff" font-family="Arial" font-size="16">busy</text><text x="485" y="412" fill="#7ec8ff" font-family="Arial" font-size="20" font-weight="700">fail fast, not forever</text>
-  <rect x="815" y="235" width="290" height="190" rx="16" fill="#123b50"/><text x="845" y="280" fill="#d9f2ff" font-family="Arial" font-size="24" font-weight="700">Shutdown</text><text x="845" y="318" fill="#a9cddd" font-family="Arial" font-size="18">readiness becomes false</text><path d="M845 360 H1040" stroke="#7ec8ff" stroke-width="5" marker-end="url(#a)"/><text x="845" y="402" fill="#7ec8ff" font-family="Arial" font-size="20" font-weight="700">reject new work</text>
-  <text x="95" y="530" fill="#ffffff" font-family="Arial" font-size="23" font-weight="700">Every unit of work needs a time limit, capacity limit, and observable rejection path.</text>
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#061523"/>
+      <stop offset="100%" stop-color="#0b2233"/>
+    </linearGradient>
+    <linearGradient id="cardBg4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f2d42"/>
+      <stop offset="100%" stop-color="#0a2130"/>
+    </linearGradient>
+    <marker id="arrowBlue4" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#60a5fa"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg4)"/>
+  <rect x="36" y="32" width="1128" height="566" rx="20" fill="url(#cardBg4)" stroke="#1e4a6b" stroke-width="1.5"/>
+
+  <text x="68" y="78" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="700">What I Review Before Approving a Go Service</text>
+  <text x="68" y="108" fill="#93b8d4" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15">"Tests pass" is not a production signal. I want to know how it fails under load, latency, and deployment.</text>
+
+  <!-- Card 1 -->
+  <g transform="translate(68,140)">
+    <rect width="330" height="240" rx="14" fill="#0e2c40" stroke="#25638f" stroke-width="1.5"/>
+    <rect x="20" y="20" width="130" height="24" rx="6" fill="#123c56"/>
+    <text x="85" y="36" fill="#93c5fd" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" text-anchor="middle">1. DEADLINES</text>
+
+    <text x="20" y="75" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700">Context Propagation</text>
+    <text x="20" y="100" fill="#7dd3fc" font-family="monospace" font-size="12.5">ctx, cancel := WithTimeout(ctx, 150ms)</text>
+
+    <path d="M20 118 H310" stroke="#1a4a67" stroke-width="1.5"/>
+
+    <text x="20" y="145" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Every outbound call carries ctx</text>
+    <text x="20" y="167" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Service owns a deadline, not the caller</text>
+    <text x="20" y="189" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Goroutines never outlive the request</text>
+
+    <rect x="20" y="206" width="150" height="22" rx="4" fill="#450a0a"/>
+    <text x="95" y="221" fill="#fca5a5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">No deadline = leaked work</text>
+  </g>
+
+  <!-- Card 2 -->
+  <g transform="translate(412,140)">
+    <rect width="330" height="240" rx="14" fill="#0e2c40" stroke="#25638f" stroke-width="1.5"/>
+    <rect x="20" y="20" width="130" height="24" rx="6" fill="#123c56"/>
+    <text x="85" y="36" fill="#93c5fd" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" text-anchor="middle">2. CAPACITY</text>
+
+    <text x="20" y="75" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700">Bounded Concurrency</text>
+    <text x="20" y="100" fill="#7dd3fc" font-family="monospace" font-size="12.5">workers := make(chan struct{}, 64)</text>
+
+    <path d="M20 118 H310" stroke="#1a4a67" stroke-width="1.5"/>
+
+    <text x="20" y="145" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Pool size is explicit and documented</text>
+    <text x="20" y="167" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Saturation returns ErrBusy, not a queue</text>
+    <text x="20" y="189" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Body, batch, and pool limits enforced</text>
+
+    <rect x="20" y="206" width="165" height="22" rx="4" fill="#422006"/>
+    <text x="102" y="221" fill="#fcd34d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">Unbounded = hidden OOM</text>
+  </g>
+
+  <!-- Card 3 -->
+  <g transform="translate(756,140)">
+    <rect width="340" height="240" rx="14" fill="#0e2c40" stroke="#25638f" stroke-width="1.5"/>
+    <rect x="20" y="20" width="140" height="24" rx="6" fill="#123c56"/>
+    <text x="90" y="36" fill="#93c5fd" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" text-anchor="middle">3. LIFECYCLE</text>
+
+    <text x="20" y="75" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700">Graceful Shutdown</text>
+    <text x="20" y="100" fill="#7dd3fc" font-family="monospace" font-size="12.5">srv.Shutdown(ctx)  // drain, then close</text>
+
+    <path d="M20 118 H310" stroke="#1a4a67" stroke-width="1.5"/>
+
+    <text x="20" y="145" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Readiness false before termination</text>
+    <text x="20" y="167" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• In-flight work drains within deadline</text>
+    <text x="20" y="189" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13">• Probes, limits, rollback verified</text>
+
+    <rect x="20" y="206" width="150" height="22" rx="4" fill="#450a0a"/>
+    <text x="95" y="221" fill="#fca5a5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">Hard kill = dropped writes</text>
+  </g>
+
+  <!-- Bottom rules -->
+  <rect x="68" y="416" width="1028" height="152" rx="14" fill="#081d2b" stroke="#1d5a7d" stroke-width="1.5"/>
+  <text x="100" y="452" fill="#7dd3fc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700">The Review Question Isn't "Does It Work?" — It's "How Does It Fail?"</text>
+  <g transform="translate(100,474)">
+    <circle cx="6" cy="6" r="5" fill="#38bdf8"/>
+    <text x="22" y="10" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5"><tspan font-weight="700">Failure injection:</tspan> make dependencies slow, error, and return garbage — verify behavior before production does it for you.</text>
+    <circle cx="6" cy="34" r="5" fill="#38bdf8"/>
+    <text x="22" y="38" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5"><tspan font-weight="700">Observability:</tspan> metrics, structured logs, and traces must answer "which dependency is slow?" without a redeploy.</text>
+    <circle cx="6" cy="62" r="5" fill="#38bdf8"/>
+    <text x="22" y="66" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5"><tspan font-weight="700">Boring limits:</tspan> every goroutine, connection, queue, and retry needs a ceiling — and an alert when it is hit.</text>
+  </g>
 </svg>
